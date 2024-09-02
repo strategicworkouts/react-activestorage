@@ -11,10 +11,12 @@ export const upload = async ({
   file,
   csrf,
   progress,
+  uploadUrl = URL,
 }: {
   file: File;
   csrf?: ActiveStorageCSRF /* specify a null CSRF to skips sending an "X-CSRF-TOKEN" header */;
   progress?(_: ActiveStorageProgress): void;
+  uploadUrl?: string;
 }): Promise<ActiveStorageBlob> => {
   const token = await (async () => {
     if (typeof csrf === "function") {
@@ -28,7 +30,7 @@ export const upload = async ({
     }
   })();
 
-  const response = await fetch(URL, {
+  const response = await fetch(uploadUrl, {
     method: "POST",
     headers: {
       Accept: "application/json",

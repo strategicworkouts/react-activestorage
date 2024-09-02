@@ -6,11 +6,17 @@ import type { ActiveStorageCSRF } from "./types/active_storage_csrf";
 
 import { upload } from "./upload";
 
+const DEFAULT_URL = "/rails/active_storage/direct_uploads";
+
 export const useActiveStorage = (
   file?: File,
   callback?: (_: { blob?: ActiveStorageBlob; error?: Error }) => void,
   csrf?: ActiveStorageCSRF /* specify a null CSRF to skips sending an "X-CSRF-TOKEN" header */,
-) => {
+  URL: string = DEFAULT_URL /* specify a custom URL to upload the file to */
+): {
+  uploading: boolean;
+  progress?: ActiveStorageProgress;
+} => {
   const [progress, setProgress] = useState<ActiveStorageProgress | undefined>();
   const [uploading, setUploading] = useState<boolean>(false);
   const ref = useRef(callback);
@@ -31,6 +37,7 @@ export const useActiveStorage = (
           file,
           csrf,
           progress: setProgress,
+          uploadUrl: URL,
         });
         ref.current?.({ blob });
       } catch (error: Error | unknown) {
