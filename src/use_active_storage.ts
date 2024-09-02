@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { checksum } from "./checksum";
 import { upload } from "./upload";
 
-const URL = "/rails/active_storage/direct_uploads";
+const DEFAULT_URL = "/rails/active_storage/direct_uploads";
 
 type Progress = {
   loaded: number;
@@ -27,6 +27,7 @@ export const useActiveStorage = (
   file?: File,
   callback?: Callback,
   csrf?: CSRF /* specify a null CSRF to skips sending an "X-CSRF-TOKEN" header */,
+  URL: string = DEFAULT_URL /* specify a custom URL to upload the file to */
 ): {
   uploading: boolean;
   progress?: Progress;
