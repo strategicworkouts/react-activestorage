@@ -12,6 +12,7 @@ export const useActiveStorage = (
   file?: File,
   callback?: (_: { blob?: ActiveStorageBlob; error?: Error }) => void,
   csrf?: ActiveStorageCSRF /* specify a null CSRF to skips sending an "X-CSRF-TOKEN" header */,
+  storageHeaders: Record<string, string> = {},
   URL: string = DEFAULT_URL /* specify a custom URL to upload the file to */
 ): {
   uploading: boolean;
@@ -38,6 +39,7 @@ export const useActiveStorage = (
           csrf,
           progress: setProgress,
           uploadUrl: URL,
+          storageHeaders,
         });
         ref.current?.({ blob });
       } catch (error: Error | unknown) {
