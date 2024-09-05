@@ -20,13 +20,16 @@ type Upload = {
   headers: Record<string, string>;
 };
 
+interface HashMap<T> {
+  [key: string]: T;
+}
+
 type Callback = (params: { blob?: Blob; error?: Error }) => void;
-type CSRF = string | null | (() => Promise<string>);
 
 export const useActiveStorage = (
   file?: File,
   callback?: Callback,
-  csrf?: CSRF /* specify a null CSRF to skips sending an "X-CSRF-TOKEN" header */,
+  storageHeaders: HashMap<string> = {},
   URL: string = DEFAULT_URL /* specify a custom URL to upload the file to */
 ): {
   uploading: boolean;
@@ -47,25 +50,13 @@ export const useActiveStorage = (
       setUploading(true);
       setProgress(undefined);
 
-      const token = await (async () => {
-        if (typeof csrf === "function") {
-          return await csrf();
-        } else {
-          return csrf === undefined
-            ? document
-                ?.querySelector('meta[name="csrf-token"]')
-                ?.getAttribute("content")
-            : csrf;
-        }
-      })();
-
       try {
         const response = await fetch(URL, {
           method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            ...(token ? { "X-CSRF-Token": token } : {}),
+            ...storageHeaders,
           },
           body: JSON.stringify({
             blob: {
