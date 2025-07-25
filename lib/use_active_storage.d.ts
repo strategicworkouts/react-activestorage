@@ -1,20 +1,10 @@
-type Progress = {
-    loaded: number;
-    total: number;
-};
-type Blob = {
-    signed_id: string;
-    filename: string;
-};
-interface HashMap<T> {
-    [key: string]: T;
-}
-type Callback = (params: {
-    blob?: Blob;
+import type { ActiveStorageProgress } from "./types/active_storage_progress";
+import type { ActiveStorageBlob } from "./types/active_storage_blob";
+import type { ActiveStorageCSRF } from "./types/active_storage_csrf";
+export declare const useActiveStorage: (file?: File, callback?: (_: {
+    blob?: ActiveStorageBlob;
     error?: Error;
-}) => void;
-export declare const useActiveStorage: (file?: File, callback?: Callback, storageHeaders?: HashMap<string>, URL?: string) => {
+}) => void, csrf?: ActiveStorageCSRF, storageHeaders?: Record<string, string>, URL?: string) => {
     uploading: boolean;
-    progress?: Progress;
+    progress?: ActiveStorageProgress;
 };
-export {};

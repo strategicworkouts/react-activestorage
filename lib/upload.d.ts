@@ -1,10 +1,10 @@
-export declare const upload: ({ url, method, file, headers, progress, }: {
-    url: string;
-    method: string;
+import type { ActiveStorageBlob } from "./types/active_storage_blob";
+import type { ActiveStorageCSRF } from "./types/active_storage_csrf";
+import type { ActiveStorageProgress } from "./types/active_storage_progress";
+export declare const upload: ({ file, csrf, progress, uploadUrl, storageHeaders, }: {
     file: File;
-    headers: Record<string, string>;
-    progress?(_: {
-        loaded: number;
-        total: number;
-    }): void;
-}) => Promise<void>;
+    csrf?: ActiveStorageCSRF;
+    progress?(_: ActiveStorageProgress): void;
+    uploadUrl?: string;
+    storageHeaders?: Record<string, string>;
+}) => Promise<ActiveStorageBlob>;
